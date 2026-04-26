@@ -1,3 +1,5 @@
+require("dotenv").config(); // 🔑 Load .env variables
+
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
@@ -11,15 +13,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// DB connect
+// Connect Database
 connectDB();
 
 // Routes
 app.use("/", authRoutes);
 app.use("/", fileRoutes);
 
-// Serve uploads folder
+// Serve uploaded files
 app.use("/uploads", express.static("uploads"));
 
-const PORT = 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// 🔑 IMPORTANT for deployment
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
