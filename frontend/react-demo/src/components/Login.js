@@ -4,8 +4,10 @@ function Login({ setIsLoggedIn, setUsername }) {
   const [username, setUser] = useState("");
   const [password, setPass] = useState("");
 
+  const BASE_URL = "https://digitallocker1.onrender.com";
+
   const signup = async () => {
-    await fetch("http://localhost:5000/signup", {
+    await fetch(`${BASE_URL}/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -17,7 +19,7 @@ function Login({ setIsLoggedIn, setUsername }) {
   };
 
   const login = async () => {
-    const res = await fetch("http://localhost:5000/login", {
+    const res = await fetch(`${BASE_URL}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

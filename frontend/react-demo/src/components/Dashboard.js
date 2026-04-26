@@ -6,10 +6,12 @@ function Dashboard({ setIsLoggedIn, username }) {
 
   const storedUser = localStorage.getItem("username");
 
+  const BASE_URL = "https://digitallocker1.onrender.com";
+
   const fetchFiles = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/files/${storedUser}`
+        `${BASE_URL}/files/${storedUser}`
       );
       const data = await res.json();
       setFiles(data);
@@ -32,7 +34,7 @@ function Dashboard({ setIsLoggedIn, username }) {
     fd.append("file", file);
     fd.append("username", storedUser);
 
-    await fetch("http://localhost:5000/upload", {
+    await fetch(`${BASE_URL}/upload`, {
       method: "POST",
       body: fd
     });
@@ -42,7 +44,7 @@ function Dashboard({ setIsLoggedIn, username }) {
   };
 
   const deleteFile = async (id) => {
-    await fetch(`http://localhost:5000/delete/${id}`, {
+    await fetch(`${BASE_URL}/delete/${id}`, {
       method: "DELETE"
     });
     fetchFiles();
@@ -55,7 +57,6 @@ function Dashboard({ setIsLoggedIn, username }) {
 
   return (
     <div>
-      {/* HEADER */}
       <div className="header">
         <h2>📁 Digital Locker</h2>
         <div>
@@ -64,7 +65,6 @@ function Dashboard({ setIsLoggedIn, username }) {
         </div>
       </div>
 
-      {/* MAIN CARD */}
       <div className="container">
         <h3>Upload File</h3>
 
@@ -87,7 +87,7 @@ function Dashboard({ setIsLoggedIn, username }) {
 
                 <div className="actions">
                   <a
-                    href={`http://localhost:5000/uploads/${f.filename}`}
+                    href={`${BASE_URL}/uploads/${f.filename}`}
                     target="_blank"
                     rel="noreferrer"
                   >
