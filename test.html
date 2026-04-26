@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Digital Locker Test</title>
+</head>
+<body>
+
+  <h1>Digital Locker</h1>
+
+  <h2>Signup</h2>
+  <input type="text" id="signupUser" placeholder="Username">
+  <input type="password" id="signupPass" placeholder="Password">
+  <button onclick="signup()">Signup</button>
+
+  <h2>Login</h2>
+  <input type="text" id="loginUser" placeholder="Username">
+  <input type="password" id="loginPass" placeholder="Password">
+  <button onclick="login()">Login</button>
+
+  <h2>Upload File</h2>
+  <input type="file" id="fileInput">
+  <button onclick="uploadFile()">Upload</button>
+
+  <h2>Files</h2>
+  <button onclick="getFiles()">Refresh Files</button>
+  <ul id="fileList"></ul>
+
+  <script>
+    const baseURL = "http://localhost:5000";
+
+    async function signup() {
+      const username = document.getElementById("signupUser").value;
+      const password = document.getElementById("signupPass").value;
+
+      const res = await fetch(baseURL + "/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+      alert(data.message);
+    }
+
+    async function login() {
+      const username = document.getElementById("loginUser").value;
+      const password = document.getElementById("loginPass").value;
+
+      const res = await fetch(baseURL + "/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+      alert(data.message);
+    }
+
+    async function uploadFile() {
+      const fileInput = document.getElementById("fileInput");
+
+      if (!fileInput.files[0]) {
+        alert("Select a file first!");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", fileInput.files[0]);
+
+      const res = await fetch(baseURL + "/upload", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+      alert(data.message);
+      getFiles();
+    }
+
+    async function getFiles() {
+      const res = await fetch(baseURL + "/files");
+      const files = await res.json();
+
+      const list = document.getElementById("fileList");
+      list.innerHTML = "";
+
+      files.forEach(file => {
+        const li = document.createElement("li");
+
+        li.innerHTML = `
+          <a href="${baseURL}/view/${file.filename}" target="_blank">
+            ${file.originalname}
+          </a>
+          <button onclick="deleteFile('${file._id}')">Delete</button>
+        `;
+
+        list.appendChild(li);
+      });
+    }
+
+    async function deleteFile(id) {
+      await fetch(baseURL + "/delete/" + id, {
+        method: "DELETE"
+      });
+
+      alert("File deleted");
+      getFiles();
+    }
+  </script>
+
+</body>
+</html>
