@@ -10,9 +10,7 @@ function Dashboard({ setIsLoggedIn, username }) {
 
   const fetchFiles = async () => {
     try {
-      const res = await fetch(
-        `${BASE_URL}/files/${storedUser}`
-      );
+      const res = await fetch(`${BASE_URL}/files/${storedUser}`);
       const data = await res.json();
       setFiles(data);
     } catch (err) {
@@ -22,6 +20,7 @@ function Dashboard({ setIsLoggedIn, username }) {
 
   useEffect(() => {
     fetchFiles();
+    // eslint-disable-next-line
   }, []);
 
   const upload = async () => {
@@ -36,7 +35,7 @@ function Dashboard({ setIsLoggedIn, username }) {
 
     await fetch(`${BASE_URL}/upload`, {
       method: "POST",
-      body: fd
+      body: fd,
     });
 
     setFile(null);
@@ -45,7 +44,7 @@ function Dashboard({ setIsLoggedIn, username }) {
 
   const deleteFile = async (id) => {
     await fetch(`${BASE_URL}/delete/${id}`, {
-      method: "DELETE"
+      method: "DELETE",
     });
     fetchFiles();
   };
@@ -57,14 +56,18 @@ function Dashboard({ setIsLoggedIn, username }) {
 
   return (
     <div>
+      {/* HEADER */}
       <div className="header">
         <h2>📁 Digital Locker</h2>
         <div>
           <span>👋 {username || storedUser}</span>
-          <button className="logout" onClick={logout}>Logout</button>
+          <button className="logout" onClick={logout}>
+            Logout
+          </button>
         </div>
       </div>
 
+      {/* MAIN */}
       <div className="container">
         <h3>Upload File</h3>
 
@@ -94,7 +97,9 @@ function Dashboard({ setIsLoggedIn, username }) {
                     View
                   </a>
 
-                  <button onClick={() => deleteFile(f._id)}>Delete</button>
+                  <button onClick={() => deleteFile(f._id)}>
+                    Delete
+                  </button>
                 </div>
               </div>
             ))}
